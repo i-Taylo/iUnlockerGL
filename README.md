@@ -93,7 +93,7 @@ This is a legal agreement between you and Taylo for using iUnlockerGL software. 
 
 By using iUnlockerGL, you confirm that you understand and agree to these terms.
 
-- > [LICENSE](https://github.com/i-Taylo/iUnlockerGL/LICENSE)
+- > [LICENSE](https://github.com/i-Taylo/iUnlockerGL/blob/main/LICENSE)
 
 </div>
 
