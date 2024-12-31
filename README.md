@@ -12,6 +12,14 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 <div align="center" style="margin: 8px;">
 
 
+| Chipset           | Supports?        | Works? |
+|----------------|----------------|---------|
+| Snapdragon      | Supported       | Yes ✅    | 
+| MediaTek    | Supported   | Yes ✅ | 
+| Exynos            | Supported   | Yes ✅ |
+| Others         | Supported   | Yes ✅ |
+
+
 | Arch           | Result         | Works? |
 |----------------|----------------|---------|
 | arm64-v8a      | Tested        | Yes     | 
