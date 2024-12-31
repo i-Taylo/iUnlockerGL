@@ -197,11 +197,11 @@ if ! $SDK_ROOTDIR/bin/prototype; then
 else
     # It's Important to tell our service of the prototype success.
     run_thro='LILITH_NAMESPACE_PRELOAD'
-    sclass_handler="__LXDF__SERVICEPTR__$AARCH__"
+    sclass_handler="__LXDF__SERVICEPTR__A$ARCH__"
     sclass_uuid_magic_addr='0x28F380'
     sclass_receiver_expt_value="${run_thro}_BASE_OK"
     gfwriter -o "$MODPATH/prototype.dat" \
-    -s "$sclass_handler" -k "$sclass_uuid_magic_addr" -v "$sclass_receiver_expt_value" 2>&1 | redi
+    -s "$sclass_handler" -k "[$sclass_uuid_magic_addr]" -v "$sclass_receiver_expt_value" 2>&1 | redi
 fi
 
 # installing me application 
