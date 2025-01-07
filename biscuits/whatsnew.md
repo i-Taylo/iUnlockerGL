@@ -1,2 +1,2 @@
 ### Changelog
-- initial release
+- Updated module duration

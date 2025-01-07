@@ -18,7 +18,7 @@
     SQUARE(                                                 \
         (__arm__ ? ARCH_CODE_ARM                            \
         : (__aarch64__ ? ARCH_CODE_ARM64                    \
-        : (__i686__ ? ARCH_CODE_X86                         \
+        : (__i386__ ? ARCH_CODE_X86                         \
         : (__x86_64__ ? ARCH_CODE_X86_64                    \
         : -1)))))
 
@@ -30,7 +30,7 @@
 #define ARCH_NAME                                \
     (__arm__ ? CONCAT(a, r) "m32"                \
     : (__aarch64__ ? CONCAT(a, r) "m64"          \
-    : (__i686__ ? CONCAT(x, 8) "6"               \
+    : (__i386__ ? CONCAT(x, 8) "6"               \
     : (__x86_64__ ? CONCAT(x, 8) "6_64"          \
     : "unknown"))))
 

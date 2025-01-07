@@ -241,3 +241,11 @@ if cp -af "$MODULETMPDIR/"* "$BASE"; then
 else
 	raise_error "Couldn't move important files"
 fi
+
+# Last step
+APP_DATA="/data/data/com.TayloIUnlockerGL"
+if [ -f "$APP_DATA/expired" ]; then
+    if rm $APP_DATA/expired; then
+        spr "Successfully removed: $APP_DATA/expired"
+    fi
+fi
