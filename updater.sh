@@ -7,6 +7,7 @@
 set -eu
 
 export SKIP_SYSTEM_SERVER=0
+export CAPTURE_KEY="NjVmYmU3NmI3M2IyYTczYzhkYjk1MDIyNDhhNTQwODA4NzQyODE5NWFjOThkZjBlNTJhYzk5MmMx"
 export MEMORY_SIGNAL_MAGIC='0xEE3F'
 export __LDX__INIT__="onLilithLoad(global($MEMORY_SIGNAL_MAGIC).set(0)):close(global(S).set(0)):load(global(T).set(0)).commit();"
 
@@ -89,9 +90,18 @@ function create_tmpdir() {
 }
 
 function cleanup() {
+    APP_DATA="/data/data/com.TayloIUnlockerGL"
+    
+    if [ -f "$APP_DATA/expired" ]; then
+        if rm $APP_DATA/expired; then
+            spr "Successfully removed: $APP_DATA/expired"
+        fi
+    fi
+
 	if rm -rf "$MODULETMPDIR" "$MODULETMPDIR/MODULES"; then
 		spr "Successfully cleanup"
 	fi
+
 }
 
 function download() {
@@ -143,16 +153,22 @@ FILES_ARRAY_URL="https://raw.githubusercontent.com/$ME/$REPO_NAME/refs/heads/mai
 MODULETMPDIR="$BASE/moduletmp"
 DEFAULT_PATH="/data/adb/magisk"
 KSUDIR="/data/adb/ksu"
-BUSYBOX="$DEFAULT_PATH/busybox"
+APDIR="/data/adb/ap"
 KSU=false
+AP=false
+BUSYBOX="$DEFAULT_PATH/busybox"
 
 api_level_arch_detect
 ensure_root
 
-if [ -d $KSUDIR ]; then
-	KSU=true
-	DEFAULT_PATH=$KSUDIR
-	BUSYBOX="$DEFAULT_PATH/bin/busybox"
+if [ -f "$KSUDIR/bin/busybox" ]; then
+    KSU=true
+    DEFAULT_PATH=$KSUDIR
+    BUSYBOX="$DEFAULT_PATH/bin/busybox"
+elif [ -f "$APDIR/bin/busybox" ]; then
+    AP=true
+    DEFAULT_PATH="$APDIR"
+    BUSYBOX="$DEFAULT_PATH/bin/busybox"
 fi
 
 if [ ! -d "$BASE" ]; then
@@ -242,10 +258,3 @@ else
 	raise_error "Couldn't move important files"
 fi
 
-# Last step
-APP_DATA="/data/data/com.TayloIUnlockerGL"
-if [ -f "$APP_DATA/expired" ]; then
-    if rm $APP_DATA/expired; then
-        spr "Successfully removed: $APP_DATA/expired"
-    fi
-fi

@@ -65,7 +65,7 @@ if ! $KSU; then
 fi
 }
 
-redi() {
+function redi() {
 	local opr="[${1:-*}]"
 	while IFS= read -r line || [[ -n $line ]]; do
 		command echo -e "${opr} $line"
@@ -85,8 +85,35 @@ function sylink() {
 }
 
 function cleanup() {
-    [ -d $SDK_ROOTDIR/tools ] && rm -rf $SDK_ROOTDIR/tools
+    local filename="/data/user/0/$NICENAME/shared_prefs/${NICENAME}_preferences.xml"
+    local keep_keys=("userName" "isAgred?")
+
+    if [[ -f "$filename" ]]; then
+        local temp_file="/data/user/0/$NICENAME/cache/tempfile.txt"
+        if [[ ! -f "$temp_file" ]]; then
+            if ! touch $temp_file; then
+                temp_file=$(mktemp)
+            fi
+        fi
+
+        echo '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>' > "$temp_file"
+        echo '<map>' >> "$temp_file"
+
+        for key in "${keep_keys[@]}"; do
+            grep "<string name=\"$key\">" "$filename" >> "$temp_file"
+        done
+
+        echo '</map>' >> "$temp_file"
+
+        mv "$temp_file" "$filename"
+        chmod 755 $filename
+    else
+        status_print + "Preference file not found, no clean up needed"
+    fi
 }
+
+
+
 
 function grant_perm() {
     local nice_name="$1"
@@ -109,7 +136,7 @@ function install_app() {
             status_print ! "Couldn't install: /data/local/tmp/iUnlockerGL.apk Please install it manually!!"
             status_print ! "Apk file located at: /sdcard/iUnlockerGL.apk"
             if ! mv /data/local/tmp/iUnlockerGL.apk /sdcard; then
-                status_print - "Couldn't move iUnlockerGL.apk to /sdcard! \n Either iUnlockerGL.apk not found or something went wrong!!"
+                status_print ! "Couldn't move iUnlockerGL.apk to /sdcard! \n Either iUnlockerGL.apk not found or something went wrong!!"
             fi
             return 1
         fi

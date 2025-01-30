@@ -11,11 +11,17 @@ extract() {
 }
 # Root interface detection
 KSUDIR="/data/adb/ksu"
+APDIR="/data/adb/ap"
 BUSYBOX="$DEFAULT_PATH/busybox"
 KSU=false
+AP=false
 if [ -f "$KSUDIR/bin/busybox" ]; then
     KSU=true
     DEFAULT_PATH=$KSUDIR
+    BUSYBOX="$DEFAULT_PATH/bin/busybox"
+elif [ -f "$APDIR/bin/busybox" ]; then
+    AP=true
+    DEFAULT_PATH="$APDIR"
     BUSYBOX="$DEFAULT_PATH/bin/busybox"
 fi
 
