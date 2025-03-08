@@ -195,7 +195,7 @@ fi # end of downloading
 
 #
 dos2unix "${FILES_ARRAY_URL##*/}"
-MODULES_FILE="$(cat ${FILES_ARRAY_URL##*/})"
+MODULES_FILE="$(cat ${FILES_ARRAY_URL##*/} | sed "s/\$ARCH/$ARCH/g" | sed "s/\$ABI/$ABI/g")"
 for file in ${MODULES_FILE[@]}; do
 	if ! download "./$file" "$URL/$file"; then
 		raise_error "error downloading important file"

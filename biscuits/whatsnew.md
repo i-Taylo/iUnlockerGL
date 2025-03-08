@@ -1,4 +1,9 @@
 ### Changelog
-- [ Module ] Updated module duration.
-- [ Module ] Fixed a critical bug that caused bans when using the GPU tool, Vulkan Tool, Info Tool.
-- [ Module & App ] Enhanced performance and stability.
+- **[ Module ]** Updated module duration.
+- **[ Module ]** Fixed:
+  1. Freezing issue  
+  2. System crash  
+- **[ App ]** Added:  
+  1. Presets  
+  2. Standard iUnlocker  
+- **[ Module & App ]** Enhanced performance and stability.

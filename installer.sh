@@ -86,7 +86,7 @@ function sylink() {
 
 function cleanup() {
     local filename="/data/user/0/$NICENAME/shared_prefs/${NICENAME}_preferences.xml"
-    local keep_keys=("userName" "isAgred?")
+    local keep_keys=("gl_vk_warning_skipped" "userName" "isAgred?" "hintWarn" "isDark" "showDataCollection")
 
     if [[ -f "$filename" ]]; then
         local temp_file="/data/user/0/$NICENAME/cache/tempfile.txt"
@@ -110,10 +110,12 @@ function cleanup() {
     else
         status_print + "Preference file not found, no clean up needed"
     fi
+
+    if [[ -f "$SDK_ROOTDIR/bin/prototype" ]]; then
+        rm -rf "$SDK_ROOTDIR/bin/prototype"
+    fi
+        
 }
-
-
-
 
 function grant_perm() {
     local nice_name="$1"
@@ -151,6 +153,8 @@ checkMagiskVer
 NEEDED=(
     "module.prop"
     "updater.sh"
+    "uninstall.sh"
+    "plugin_flasher.sh"
     "iunlocker_config.dat"
     "LICENSE"
     "iunlocker-sdk/*"
@@ -189,6 +193,7 @@ done
     fi
     change_perm -R 755 $SDK_ROOTDIR
     change_perm 755 "$MODPATH/updater.sh"
+    change_perm 755 "$MODPATH/plugin_flasher.sh"
     cp -af "$TMPDIR/bin/bash" $SDK_ROOTDIR/bin/
 }
 
