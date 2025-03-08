@@ -1,9 +1,9 @@
 ### Changelog
 - **[ Module ]** Updated module duration.
 - **[ Module ]** Fixed:
-  1. Freezing issue  
-  2. System crash  
+  - Freezing issue  
+  - Uninstalling an active package with existing configurations leads to system crashes.  
 - **[ App ]** Added:  
-  1. Presets  
-  2. Standard iUnlocker  
+  - Presets  
+  - Standard iUnlocker  
 - **[ Module & App ]** Enhanced performance and stability.
