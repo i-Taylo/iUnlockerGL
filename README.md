@@ -40,7 +40,7 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 ### Requirements
 |   |   |
 ------|-----------|
-| Android | Android 27 and higher |
+| Android | Android API 27 and higher |
 | Magisk | v26.4 and higher |
 | KernelSU | Latest |
 |   |   |
