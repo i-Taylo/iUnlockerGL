@@ -207,24 +207,3 @@ else
     # notify post fs script
     echo "$SAPPHIRE_VERSION_STRING" > "$SDKDIR/tmp/.sapphire_install"
 fi
-
-# zipit=false
-# ZIP_FILENAME="sapphire-plugin.zip"
-# if [[ -d "$TEMP_STRUCT/system" ]]; then
-    # zipit=true
-# fi
-
-# if [[ "$zipit" == "true" ]]; then
-    # spr "Zipping sapphire package..."
-    # if ! zip -qr "$ZIP_FILENAME" .; then
-        # raise_error "Couldn't generate sapphire plugin archive"
-        # exit 1
-    # fi
-    # if ! Flasher flash "$ZIP_FILENAME"; then
-        # raise_error "Couldn't flash sapphire plugin!"
-        # exit 1
-    # fi
-    # else
-    # raise_error "Goodbye"
-    # exit 1
-# fi

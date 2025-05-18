@@ -1,6 +1,7 @@
 <div align="center" style="margin: 8px;">
 
-# iUnlocker GLTool ![iUnlocker GLTool](https://img.shields.io/github/tag/i-Taylo/iUnlockerGL?color=white)
+# iUnlocker GLTool ![iUnlocker GLTool](https://img.shields.io/github/v/tag/i-Taylo/iUnlockerGL?color=white&label=)
+
 
 
 
@@ -69,7 +70,8 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 ### Copyright Notice
 Copyright © 2020 iUnlocker</br> All rights reserved.
 
-# iUnlockerGL ![](https://img.shields.io/github/v/tag/i-Taylo/iUnlockerGL?color=white) License 
+# iUnlockerGL ![iUnlocker GLTool](https://img.shields.io/github/v/tag/i-Taylo/iUnlockerGL?color=white&label=)
+ License 
 
 
 <div align="left" style="margin: 8px;">

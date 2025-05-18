@@ -50,33 +50,6 @@ if $NOFD; then
     fi
 fi
 
-if [ "$KSU" = true ]; then
-	if ! /data/adb/ksu/bin/ksud module uninstall "$iunlocker_plugin_id"; then
-		append_something "Error while removing $iunlocker_plugin_id plugin from KSU"
-	fi
-	if ! /data/adb/ksu/bin/ksud module uninstall "$iunlocker_sapphire_id"; then
-		append_something "Error while removing $iunlocker_sapphire_id plugin from KSU"
-	fi
-elif [ "$AP" = true ]; then
-	if ! /data/adb/ap/bin/apd module uninstall "$iunlocker_plugin_id"; then
-		append_something "Error while removing $iunlocker_plugin_id plugin from AP"
-	fi
-	if ! /data/adb/ap/bin/apd module uninstall "$iunlocker_sapphire_id"; then
-		append_something "Error while removing $iunlocker_sapphire_id plugin from AP"
-	fi
-else
-	if [ -n "$iunlocker_plugin_id" ] && [[ -d "$STDPLUGIN" ]]; then
-		if ! rm -rf "$STDPLUGIN"; then
-			append_something "Error while removing $iunlocker_plugin_id plugin from Magisk?!"
-		fi
-	fi
-	if [ -n "$iunlocker_sapphire_id" ] && [[ -d "$SAPPHIRE_PLUGIN" ]]; then
-		if ! rm -rf "$SAPPHIRE_PLUGIN"; then
-			append_something "Error while removing $iunlocker_sapphire_id plugin from Magisk?!"
-		fi
-	fi
-fi
-
 if [[ -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat" ]]; then
     if ! rm -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat"; then
         append_something "Error while removing configuration file"

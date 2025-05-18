@@ -281,7 +281,6 @@ NEEDED=(
 	"updater.sh"
 	"uninstall.sh"
 	"plugin_flasher.sh"
-	"service.sh"
 	"post-fs-data.sh"
 	"properties.h"
 	"iUnlockerGL.apk"

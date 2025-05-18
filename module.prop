@@ -1,7 +1,7 @@
 id=Mjg2MjU1ODg0Mwo
 name=iUnlocker GLTool for android
-version=v1.1.4-r1
-versionCode=1001401
+version=v1.1.4-r2
+versionCode=1001402
 author=Taylo@Github.com/i-taylo
 description=iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing users to modify GPU informations for unlocking graphics in games and testing.
 updateJson=https://raw.githubusercontent.com/i-taylo/iUnlockerGL/main/biscuits/iUnlockerGL.json
