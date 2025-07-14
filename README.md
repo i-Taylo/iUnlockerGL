@@ -71,39 +71,39 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 Copyright © 2020 iUnlocker</br> All rights reserved.
 
 # iUnlockerGL ![iUnlocker GLTool](https://img.shields.io/github/v/tag/i-Taylo/iUnlockerGL?color=white&label=)
- License 
-
+License Agreement
 
 <div align="left" style="margin: 8px;">
-
-
 
 This is a legal agreement between you and Taylo for using iUnlockerGL software. By using the software, you accept these terms.
 
 ## Key Terms
 
 1. **Usage Rights**
-   - You can use the software for personal use only
-   - The license is non-exclusive and can be revoked
-   - You cannot transfer this license to others
+   - You may use the software for personal, educational, or demonstrational purposes
+   - You may share the original, unmodified software (including on platforms like YouTube)
+   - Commercial use of the software itself is prohibited (see restrictions below)
 
-2. **What You Cannot Do**
-   - Modify, reverse engineer, or decompile the software
-   - Share or redistribute the software
-   - Remove or change any copyright notices
-   - Use parts of the software in other projects
-   - Use the software for any business purposes
+2. **Restrictions**
+You MAY NOT:
+- Reverse engineer, decompile, or modify the software
+- Remove, alter, or obscure copyright notices
+- Extract/reuse code in other projects
+- Use the software for commercial purposes*, including:
+  - Selling the software or derivative works
+  - Integrating it into paid services/products
+  - Business operations that rely on this software
+
+*Exception: Monetized videos/tutorials about the software are allowed.
 
 3. **Ownership and Liability**
-   - Taylo owns all rights to the software
-   - The software is provided "as is" with no warranties
-   - Taylo is not responsible for any damages from using the software
-
+   - Taylo retains all intellectual property rights
+   - Software is provided "as is" without warranties
+   - Taylo is not liable for any damages from software use
 
 By using iUnlockerGL, you confirm that you understand and agree to these terms.
 
 - > [LICENSE](https://github.com/i-Taylo/iUnlockerGL/blob/main/LICENSE)
-
 </div>
 
 ---
