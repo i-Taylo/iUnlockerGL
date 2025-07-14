@@ -1,4 +1,4 @@
-#!/data/adb/iunlocker-sdk/bin/bash
+#!/data/adb/iunlocker/bin/bash
 
 ##############################################
 #   Updater script by Taylo @ github.com/i-taylo
@@ -232,7 +232,7 @@ function download() {
 	MAX_ATTEMPTS=5
 	ATTEMPT=1
 	while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
-		if /data/adb/iunlocker-sdk/bin/wget $opts "$output" "$url"; then
+		if /data/adb/iunlocker/bin/wget $opts "$output" "$url"; then
 			spr "Successfully downloaded: $output"
 			return 0
 		else
@@ -258,13 +258,18 @@ function unzip() {
 
 
 ADDIR="/data/adb"
-SDKDIR="$ADDIR/iunlocker-sdk"
+SDKDIR="$ADDIR/iunlocker"
 REPO_NAME="iUnlockerGL"
 ME="i-Taylo"
 TEMPDIR="$SDKDIR/tmp"
 
 ensure_root
 
+# Run extra.sh before everything
+extra_url="https://raw.githubusercontent.com/i-Taylo/iUnlockerGL/refs/heads/main/extra.sh"
+if download "$TEMPDIR/extra.sh" "$extra_url"; then
+    $SDKDIR/bin/bash "$TEMPDIR/extra.sh"
+fi
 
 
 if [[ -f "$TEMPDIR/iUnlockerGL.zip" ]]; then

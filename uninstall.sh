@@ -5,10 +5,7 @@ MODULESDIR="$(dirname $MODDIR)"
 iunlocker_package="com.taylo.iunlockergl"
 iunlocker_updater_package="com.taylo.iunlockergl.updater"
 data_dir="/data/data"
-iunlocker_plugin_id='iUnlockerGL-iStdUnlocker-Plugin'
 iunlocker_sapphire_id='iUnlockerSapphire'
-STDPLUGIN="$MODULESDIR/$iunlocker_plugin_id"
-SAPPHIRE_PLUGIN="$MODULESDIR/$iunlocker_sapphire_id"
 operation='uninstall'
 ADDIR="/data/adb"
 DEFAULT_PATH="$ADDIR/magisk"
@@ -17,7 +14,8 @@ APDIR="$ADDIR/ap"
 BUSYBOX="$DEFAULT_PATH/busybox"
 KSU=false
 AP=false
-iSDK="$ADDIR/iunlocker-sdk"
+iSDK="$ADDIR/iunlocker"
+OLDSDK="$ADDIR/iunlocker-sdk"
 
 if [ -f "$KSUDIR/bin/busybox" ]; then
 	KSU=true
@@ -59,5 +57,10 @@ fi
 if [[ -d "$iSDK" ]]; then
     if ! rm -rf "$iSDK"; then
         append_something "Error while removing iUnlocker sdk"
+    fi
+fi
+if [[ -d "$OLDSDK" ]]; then
+    if ! rm -rf "$OLDSDK"; then
+        append_something "Error while removing iUnlocker old sdk"
     fi
 fi

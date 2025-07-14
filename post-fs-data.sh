@@ -1,6 +1,7 @@
 MODDIR=${0%/*}
 ADDIR="/data/adb"
-SDK_ROOTDIR="$ADDIR/iunlocker-sdk"
+SDK_ROOTDIR="$ADDIR/iunlocker"
+OLDSDK="$ADDIR/iunlocker-sdk"
 PROP_FILE="$MODDIR/system.prop"
 
 log() {
@@ -32,6 +33,9 @@ addProp() {
     echo "$key=$value" >> "$PROP_FILE"
 }
 
+if [[ -d "$OLDSDK" ]]; then
+    rm -rf "$OLDSDK"
+fi
 
 # Handling plugins / Sapphire
 sapphire_install_file="$SDK_ROOTDIR/tmp/.sapphire_install"

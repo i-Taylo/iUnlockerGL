@@ -1,4 +1,4 @@
-#!/data/adb/iunlocker-sdk/bin/bash
+#!/data/adb/iunlocker/bin/bash
 
 # Deprecated 
 
@@ -168,7 +168,7 @@ function Flasher() {
 MODDIR=${0%/*}
 readonly MODID="Mjg2MjU1ODg0Mwo"
 ADDIR="/data/adb"
-SDKDIR="$ADDIR/iunlocker-sdk"
+SDKDIR="$ADDIR/iunlocker"
 ZIPTMPDIR="$MODDIR/.tempdir"
 PLUGINS=("stdunlocker")
 

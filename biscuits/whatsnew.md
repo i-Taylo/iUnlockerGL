@@ -1,10 +1,15 @@
 ## Changelog
 
-## Module
+### Module
+* Minor improvements and optimizations
 
-* **Memory Management:** Implemented enhanced memory management techniques in the native C++ code to optimize resource utilization.
-* **Memory Leaks:** Resolved several memory leaks in the C++ layer, improving module stability and performance.
-
-## App
-
-* **UI Enhancements:** Updated the user interface to support dynamic color schemes, providing a more personalized and visually appealing experience.
+### App
+* Major update to the iUnlockerGL application:
+  1. Complete source code rewrite to Kotlin
+  2. New interface and UI design
+  3. Improved application management
+  
+### App & module 
+- Added emulator support for both App and Module components
+- Improved compatibility across different Android versions
+- Optimized resource management for better performance

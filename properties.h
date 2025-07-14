@@ -8,12 +8,14 @@
 
 // --- Module Info ---
 #define MODULE_ID               "Mjg2MjU1ODg0Mwo"
-#define BACKEND_VERSION_HSTR    "v1.1.4-r2"           // Backend version string
+#define BACKEND_VERSION_HSTR    "v1.1.5-r1"           // Backend version string
 #define SIGNATURE               "fingerprinter:CF:CA:48:38:76:DD:80:F0:77:B9:F2:FC:D9:CA:5E:71:19:2C:FF:5C:BA:29:0A:A7:19:C8:F4:30:4B:E1:81:95"
 
 // --- Feature Toggles ---
 #define ENABLE_BACKGROUND_UPDATES   false            // Background update support (TODO: needs service integration)
-#define USE_SMART_BUFFER_LIBRARY    true             // Enable SmartBuffer library
+
+// Deprecated -> #define USE_SMART_BUFFER_LIBRARY    true             // Enable SmartBuffer library
+
 #define USE_SAPPHIRE_ELF_LIBRARY    true             // Enable Sapphire ELF handling library
 #define USE_ZYGISK_LIBRARY          true             // Enable Zygisk integration (Magisk modules)
 

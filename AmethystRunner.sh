@@ -1,4 +1,4 @@
-#!/data/adb/iunlocker-sdk/bin/bash
+#!/data/adb/iunlocker/bin/bash
 
 export MEMORY_SIGNAL_MAGIC='0x0AFE'
 # trap cleanup EXIT
@@ -167,7 +167,7 @@ function Flasher() {
 }
 
 ADDIR="/data/adb"
-SDKDIR="$ADDIR/iunlocker-sdk"
+SDKDIR="$ADDIR/iunlocker"
 TEMPDIR="$SDKDIR/tmp"
 TEMP_STRUCT="$TEMPDIR/Amethyst"
 

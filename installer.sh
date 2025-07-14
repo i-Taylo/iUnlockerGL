@@ -226,7 +226,7 @@ function AppInstaller() {
     return $?
 }
 
-function ensure_no_oldGl() {
+function ensure_nold() {
     keep_opt="--keep-apkinstaller-userfile"
     
     local listOf="$(AppInstaller --list)"
@@ -245,8 +245,8 @@ function ensure_no_oldGl() {
 
 function ensure_updater() {
     local updater_version=1000
-    local val="$(cat "$UPDATER_FILE")"
     local UPDATER_FILE="$SDK_ROOTDIR/updater_version"
+    local val="$(cat "$UPDATER_FILE")"
     
     if [[ ! -f "$UPDATER_FILE" ]]; then
         echo -ne "$updater_version" > $UPDATER_FILE
@@ -258,16 +258,21 @@ function ensure_updater() {
 }
 
 function install_iunlocker_app() {
-    # Using AppInstaller api
-    local keep_opt="--keep-apkinstaller-userfile"
-    local use_wu=""
-    if AppInstaller --get-running-user $keep_opt --nopr; then
-        use_wu="--use-working-user"
-    fi
-    if AppInstaller --install "$MODPATH/iUnlockerGL.apk" $keep_opt $use_wu; then
-    	for ((perm = 0; perm < ${#PERMISSIONS[@]}; perm++)); do
-    		AppInstaller --grant-app-perm "$NICENAME" "${PERMISSIONS[perm]}" $keep_opt $use_wu
-    	done
+    
+    if [ ! -f "$MODPATH/iUnlockerGL.apk" ]; then 
+        status_print w "iUnlockerGL.apk application is not found in the archive"
+    else
+        # Using AppInstaller api
+        local keep_opt="--keep-apkinstaller-userfile"
+        local use_wu=""
+        if AppInstaller --get-running-user $keep_opt --nopr; then
+            use_wu="--use-working-user"
+        fi
+        if AppInstaller --install "$MODPATH/iUnlockerGL.apk" $keep_opt $use_wu; then
+        	for ((perm = 0; perm < ${#PERMISSIONS[@]}; perm++)); do
+        		AppInstaller --grant-app-perm "$NICENAME" "${PERMISSIONS[perm]}" $keep_opt $use_wu
+        	done
+        fi
     fi
 }
 
@@ -276,15 +281,16 @@ checkMagiskVer
 # Extracting files.
 NEEDED=(
 	"module.prop"
+	"sepolicy.rule"
 	"system.prop"
-	"iunlocker-sdk/*"
+	"iunlocker/*"
 	"updater.sh"
 	"uninstall.sh"
 	"plugin_flasher.sh"
 	"post-fs-data.sh"
 	"properties.h"
 	"iUnlockerGL.apk"
-	"$MODID.dat"
+	"$MODID.dat" # v1.1.5-r1 this config will be extracted only if it's not exists in modpath | --ovrw, ++upenv
 	"LICENSE"
 	"AmethystRunner.sh"
 )
@@ -296,7 +302,7 @@ PERMISSIONS=(
 
 NICENAME="com.taylo.iunlockergl"
 ADDIR="/data/adb"
-SDK_ROOTDIR="$ADDIR/iunlocker-sdk"
+SDK_ROOTDIR="$ADDIR/iunlocker"
 ANDROID_TEMP_DIR="/data/local/tmp"
 TOOLS="$SDK_ROOTDIR/tools"
 
@@ -304,8 +310,12 @@ TOOLS="$SDK_ROOTDIR/tools"
 for ((f = 0; f < ${#NEEDED[@]}; f++)); do
     NED="${NEEDED[f]}"
     if [[ "$NED" == "$MODID.dat" ]]; then
-        extract "$NED" "$ADDIR"
-    elif [[ "$NED" == "iunlocker-sdk/*" ]]; then
+        if [[ ! -f "$ADDIR/$MODID.dat" ]]; then
+            extract "$NED" "$ADDIR"
+        else
+            $SDK_ROOTDIR/bin/upenv | redi "upenv"
+        fi
+    elif [[ "$NED" == "iunlocker/*" ]]; then
         extract "$NED" "$ADDIR"
     elif [[ "$NED" == "AmethystRunner.sh" ]]; then
         extract "$NED" "$SDK_ROOTDIR/share/Scripts"
@@ -322,7 +332,7 @@ done
 
 # Checking for SDK.
 [ ! -d $SDK_ROOTDIR ] && {
-	status_print - "SDK is not found ! it's required for :\n\t\t- Lifecycle Engine, Zygisk shared library."
+	status_print - "SDK is not found ! it's required for :\n\t\t- Lifecycle Engine, Ghost containers, Zygisk shared library."
 } || {
 	status_print + "SDK=[$SDK_ROOTDIR]"
 	if [ -z $ARCH ]; then
@@ -364,8 +374,8 @@ JsonWriter "$MODPATH/ghost.json" \
     "destructionAfter" 500 #ms
 
 # Running prototype test unit...
-function gfwriter() {
-	$SDK_ROOTDIR/bin/taylox_gfwriter "$@"
+function configen() {
+	$SDK_ROOTDIR/bin/configen "$@"
 	return $?
 }
 status_print + "Running prototype test unit..."
@@ -377,12 +387,12 @@ else
 	sclass_handler="Ghost::API::GB_INSTANCE"
 	sclass_uuid_magic_addr='0x8F2EA0'
 	sclass_uuid_identifier="UUID_MAGIC" 
-	sclass_receiver_expt_value="${run_thro}::OK_Connectivity"
-	gfwriter -o "$MODPATH/prototype.dat" \
+	sclass_receiver_expt_value="${run_thro}::OK_Connectivity" # OK_Connectivity -> essential 
+	configen -o "$MODPATH/prototype.dat" \
 		-s "$sclass_handler" -k "$sclass_uuid_identifier" -v "$sclass_uuid_magic_addr:$sclass_receiver_expt_value" 2>&1 | redi
 fi
 
-ensure_no_oldGl
+ensure_nold
 install_iunlocker_app
 ensure_updater
 
@@ -392,7 +402,7 @@ if [ ! -f "$ADDIR/$MODID.dat" ]; then
 fi
 
 if [ ! -f "$SDK_ROOTDIR/include/properties.h" ]; then
-	status_print - "Couldn't find properties.h !!! without \`$MODID.dat\` file your system will not boot correctly or it will not boot at all"
+	status_print - "Couldn't find properties.h !!! without \`properties.h\` file the module will not function properly"
 fi
 
 # Reached to this point means everything went success
