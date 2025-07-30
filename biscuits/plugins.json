@@ -2,7 +2,7 @@
   "iUnlockerSapphire": {
     "versionCode": 1000,
     "version": "v1.0-mainline",
-    "executableUrl": "",
+    "executableUrl": "https://github.com/i-Taylo/iUnlockerGL/raw/refs/heads/main/iunlocker/tools/$ARCH/sapphire_app",
     "changelog": ""
   },
   "iUnlockerSystemProper": {
