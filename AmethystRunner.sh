@@ -34,30 +34,34 @@ function cleanup() {
 }
 
 function check_for_update() {
+    spr "Checking for updates..."
     # Test plupdate_checker.sh first
-    if ! bash $SDK_ROOTDIR/share/Scripts/plupdate_checker.sh -plugin_name=iUnlockerSapphire -getVersion; then
+    if ! bash $SDK_ROOTDIR/share/Scripts/plupdate_checker.sh -plugin_name=iUnlockerSapphire -getVersion > /dev/null 2>&1; then
         raise_error "Failed to fetch sapphire version"
     else
         fetched_version="$(bash $SDK_ROOTDIR/share/Scripts/plupdate_checker.sh -plugin_name=iUnlockerSapphire -getVersion)"
         exec_url="$(bash $SDK_ROOTDIR/share/Scripts/plupdate_checker.sh -plugin_name=iUnlockerSapphire -getExecUrl)"
-        exec_dir="$SDK_ROOTDIR/bin/sapphire_app"
-        exec_ver="$(echo $($exec_dir -version))"
+        exec_file="$SDK_ROOTDIR/bin/sapphire_app"
+        exec_ver="$(sapphire_app -version)"
         formatted_url=$(echo $exec_url | sed "s/\$ARCH/$ARCH/g")
         
-        echo -e "\n\nFetched version: $fetched_version"
-        echo -e "Local version: $SAPPHIRE_VERSION"
-        echo -e "formatted url: $formatted_url"
+        spr "Fetched version: $fetched_version"
+        spr "Local version: $SAPPHIRE_VERSION"
+        spr "formatted url: $formatted_url"
         
-        if [[ "$fetched_version" != "$SAPPHIRE_VERSION" ]]; then
+        if [[ "$fetched_version" != "$exec_ver" ]]; then
             # will rename it instead of completely deleting it
-            mv "$exec_dir" "$SDK_ROOTDIR/bin/sapphire_app.bak"
-            if ! download "$exec_dir" "$formatted_url"; then
+            spr "New update available: $fetched_version"
+            mv "$exec_file" "$SDK_ROOTDIR/bin/sapphire_app.bak"
+            if ! download "$exec_file" "$formatted_url"; then
                 raise_error "Failed to download sapphire_app plugin"
                 # we don't need to exit here let the script uses the old version
-                mv "$SDK_ROOTDIR/bin/sapphire_app.bak" "$exec_dir"
+                mv "$SDK_ROOTDIR/bin/sapphire_app.bak" "$exec_file"
             else
+                chmod 755 $exec_file
+                exec_ver="$(sapphire_app -version)"
                 # let's test if the plugin works
-                if ! sapphire_app -test; then
+                if ! sapphire_app -test > /dev/null 2>&1; then
                     raise_error "Sapphire test operation failed.\nexit code: $?"
                     exit 1
                 fi
@@ -92,7 +96,6 @@ fi
 
 api_level_arch_detect
 check_for_update
-exit 0
 
 # Main process
 spr "Generation of Sapphire module structure..."
@@ -110,7 +113,7 @@ TARGET_GLMODEL="$1"
 # so let's just fucking continue
 # Ahh, shit, my sexy burger just dropped on my keyboard and made quite a mess.
 # Awwright... lesh jush call the... saph-firrr_app...
-SAPPHIRE_VERSION_STRING="v1.0-r1"
+SAPPHIRE_VERSION_STRING="$(sapphire_app -version)"
 if ! sapphire_app --new_gl_model "$TARGET_GLMODEL" --no-confirm --no-warning; then
     raise_error "Something went wrong!"
     exit 1
