@@ -12,8 +12,6 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 ---
 </div>
 
-<div align="center" style="margin: 8px;">
-
 ## Features
 
 **What iUnlockerGL can spoof:**
@@ -26,6 +24,8 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 
 ---
 
+<div align="center" style="margin: 8px;">
+   
 | API           | Status |
 |----------------|--------|
 | OpenGL ES      | ![Supported](https://img.shields.io/badge/-Supported-brightgreen) |
