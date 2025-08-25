@@ -1,7 +1,9 @@
 <div align="center" style="margin: 8px;">
 
-# iUnlocker GLTool ![iUnlocker GLTool](https://img.shields.io/github/v/tag/i-Taylo/iUnlockerGL?color=white&label=)
+# iUnlocker GLTool 
 
+![Latest Version](https://img.shields.io/github/v/release/i-Taylo/iUnlockerGL?color=blue&label=Latest%20Version)
+[![Downloads](https://img.shields.io/github/downloads/i-Taylo/iUnlockerGL/total?color=green&label=Downloads)](https://github.com/i-Taylo/iUnlockerGL/releases/latest)
 
 
 
@@ -12,28 +14,38 @@ iUnlocker GLTool is a Magisk module designed to spoof GPU information, allowing 
 
 <div align="center" style="margin: 8px;">
 
+## Features
 
-| API           | is Supported?       |
-|----------------|----------------|
-| OpenGL ES      | Supported ✅       |
-| Vulkan    | Supported ✅  |
+**What iUnlockerGL can spoof:**
+- OpenGL info (Vendor, Model, Version, Extensions)
+- Vulkan specifications (Model, Driver version, Memory, Limits)
+- Display properties (Refresh rate, HDR Support, Wide color gamut)
+- Device model/brand/build props
+- CPU details & architecture (CPU id, Capabilities)
+- RAM size & Frequency
+
+---
+
+| API           | Status |
+|----------------|--------|
+| OpenGL ES      | ![Supported](https://img.shields.io/badge/-Supported-brightgreen) |
+| Vulkan         | ![Supported](https://img.shields.io/badge/-Supported-brightgreen) |
 
 <br>
 
-| Chipset           | Supports?        | Works? |
-|----------------|----------------|---------|
-| Snapdragon      | Supported       | Yes ✅    | 
-| MediaTek    | Supported   | Yes ✅ | 
-| Exynos            | Supported   | Yes ✅ |
-| Others         | Supported   | Yes ✅ |
+| Chipset        | Status |
+|----------------|--------|
+| Snapdragon     | ![Working](https://img.shields.io/badge/-Working-success) |
+| MediaTek       | ![Working](https://img.shields.io/badge/-Working-success) |
+| Exynos         | ![Working](https://img.shields.io/badge/-Working-success) |
+| Others         | ![Working](https://img.shields.io/badge/-Working-success) |
 
-
-| Arch           | Result         | Works? |
-|----------------|----------------|---------|
-| arm64-v8a      | Tested        | Yes     | 
-| armeabi-v7a    | Not tested    | Unknown | 
-| x86            | Not tested    | Unknown |
-| x86_64         | Not tested    | Unknown |
+| Architecture   | Status |
+|----------------|--------|
+| arm64-v8a      | ![Tested](https://img.shields.io/badge/-Tested-blue) |
+| armeabi-v7a    | ![Untested](https://img.shields.io/badge/-Untested-lightgrey) |
+| x86            | ![Untested](https://img.shields.io/badge/-Untested-lightgrey) |
+| x86_64         | ![Untested](https://img.shields.io/badge/-Untested-lightgrey) |
 
 ---
 

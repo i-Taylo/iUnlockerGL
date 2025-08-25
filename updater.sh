@@ -44,6 +44,10 @@ function cleanup() {
 	if rm -rf "$TEMPDIR/iUnlockerGL.zip" "$TEMPDIR/iUnlockerGL-main" "$TEMPDIR/$ZIP_FILENAME"; then
 		spr "Successfully cleanup"
 	fi
+	
+	if [ -f "$TEMPDIR/extra.sh" ]; then
+	    rm -f "$TEMPDIR/extra.sh"
+	fi
 
 }
 
@@ -57,7 +61,6 @@ extra_url="https://raw.githubusercontent.com/i-Taylo/iUnlockerGL/refs/heads/main
 if download "$TEMPDIR/extra.sh" "$extra_url"; then
     $SDK_ROOTDIR/bin/bash "$TEMPDIR/extra.sh"
 fi
-
 
 if [[ -f "$TEMPDIR/iUnlockerGL.zip" ]]; then
     rm "$TEMPDIR/iUnlockerGL.zip"

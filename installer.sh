@@ -1,5 +1,8 @@
 trap cleanup EXIT
 
+LOGPRIORITY=3
+PROTOTYPE_LOGALL=true
+
 function bunzip() {
 	$BUSYBOX unzip "$@"
 	return $?
@@ -31,26 +34,37 @@ function extract() {
 	return 0
 }
 
+
 function status_print() {
-	local w="P"
-	local message="$2"
+    local w="P"
+    local message="$2"
+    local should_log=true
 
-	case $1 in
-	"?") w="QUESTION" ;;
-	"0") w="DEBUG" ;;
-	"!" | "i") w="WARNING" ;;
-	"-") w="ERROR" ;;
-	"+") w="INFO" ;;
-	"c") w="CLEANUP" ;;
-	"~l") w="o" ;;
-	*) w="INFO" ;;
-	esac
+    case $1 in
+        "?" ) w="QUESTION"; log_priority=2 ;;
+        "0" ) w="DEBUG";    log_priority=1 ;;
+        "!" | "i" ) w="WARNING"; log_priority=2 ;;
+        "-" ) w="ERROR";    log_priority=3 ;;
+        "+" ) w="INFO";     log_priority=2 ;;
+        "c" ) w="CLEANUP"; log_priority=2 ;;
+        "~l" ) w="o";       log_priority=2 ;;
+        * ) w="INFO";       log_priority=2 ;;
+    esac
 
-	echo -e "[$w] $message"
+    case $LOGPRIORITY in
+        1) should_log=true ;;
+        2) [ $log_priority -ge 2 ] && should_log=true || should_log=false ;;
+        3) [ $log_priority -ge 3 ] && should_log=true || should_log=false ;;
+        *) should_log=true ;;
+    esac
 
-	if [ "$1" == "-" ]; then
-		abort
-	fi
+    if $should_log; then
+        echo -e "[$w] $message"
+    fi
+
+    if [ "$1" == "-" ]; then
+        abort
+    fi
 }
 
 JsonWriter() {
@@ -113,43 +127,7 @@ function sylink() {
 	ln -s "$target" "$to" && status_print + "Symlink=[${target##*/} -> $to]" || status_print - "Couldn't create symlinks! $target -> $to"
 }
 
-function cleanup() {
-	local filename="/data/user/0/$NICENAME/shared_prefs/${NICENAME}_preferences.xml"
-	local keep_keys=("gl_vk_warning_skipped" "userName" "isAgred?" "hintWarn" "isDark" "showDataCollection")
-
-	if [[ -f "$filename" ]]; then
-		local temp_file="/data/user/0/$NICENAME/cache/tempfile.txt"
-
-		if [[ ! -f "$temp_file" ]]; then
-			touch "$temp_file" || temp_file=$(mktemp) || {
-				status_print - "Failed to create temp file"
-				exit 1
-			}
-		fi
-
-		echo '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>' >"$temp_file"
-		echo '<map>' >>"$temp_file"
-
-		match_found=false
-		for key in "${keep_keys[@]}"; do
-			if grep -q "<\(string\|boolean\) name=\"$key\"" "$filename"; then
-				grep "<\(string\|boolean\) name=\"$key\"" "$filename" >>"$temp_file"
-				match_found=true
-			fi
-		done
-
-		echo '</map>' >>"$temp_file"
-
-		if [[ "$match_found" == true ]]; then
-			mv "$temp_file" "$filename"
-			chmod 644 "$filename"
-		else
-			rm "$temp_file"
-		fi
-	else
-		status_print + "Preference file not found, no cleanup needed"
-	fi
-    
+function cleanup() {    
     prototype_exec="$SDK_ROOTDIR/bin/prototype"
 	if [[ -f "$prototype_exec" ]]; then
 		if rm -f "$SDK_ROOTDIR/bin/prototype"; then
@@ -168,55 +146,38 @@ function cleanup() {
 		fi	    
 	fi
 	
-	# 1. Module id changed in v1.1.4-r1
-    # 2. Separate std&sapphire plugins deprecated in v1.1.4-r1
-    depr="iUnlockerGL-iStdUnlocker-Plugin"
-    
-    OID="iUnlockerGL"
-    ODI="/data/adb/modules/$OID"
-
-    if [[ "$KSU" == "true" ]]; then
-        EXC="ksud"
-        if [[ -x "$DEFAULT_PATH/bin/$EXC" ]]; then
-            getAllModules="$($DEFAULT_PATH/bin/$EXC module list)"
-            for mod in $getAllModules; do
-                [[ "$mod" == "$OID" ]] && $DEFAULT_PATH/bin/$EXC module uninstall "$OID"
-                [[ "$mod" == "$depr" ]] && $DEFAULT_PATH/bin/$EXC module uninstall "$depr"
-            done
-        else
-            status_print ! "Binary $EXC not found!"
-        fi
-
-    elif [[ "$AP" == "true" ]]; then
-        EXC="apd"
-        if [[ -x "$DEFAULT_PATH/bin/$EXC" ]]; then
-            getAllModules="$($DEFAULT_PATH/bin/$EXC module list)"
-            for mod in $getAllModules; do
-                [[ "$mod" == "$OID" ]] && $DEFAULT_PATH/bin/$EXC module uninstall "$OID"
-                [[ "$mod" == "$depr" ]] && $DEFAULT_PATH/bin/$EXC module uninstall "$depr"
-            done
-        else
-            status_print ! "Binary $EXC not found!"
-        fi
-    
-    else 
-        if [[ -d "$ODI" ]]; then
-            if ! touch "$ODI/remove"; then
-                status_print - "Couldn't remove old iUnlocker version! please uninstall it manually!!"
-            fi
-        fi
-        if [[ -d "/data/adb/modules/$depr" ]]; then
-            if ! touch "/data/adb/modules/$depr/remove"; then
-                status_print - "Couldn't remove old standard iUnlocker plugin! please uninstall it manually to avoid confliction!!"
-            fi
-        fi
-    fi
-
     if [[ -f "$MODPATH/iUnlockerGL.apk" ]]; then
         if ! rm -rf "$MODPATH/iUnlockerGL.apk"; then
             status_print ! "Couldn't clean up $MODPATH/iUnlockerGL.apk"
         fi
     fi
+    
+    # $MODID.dat moved to sdkdir in v1.1.5-r2 due to prototype containment failure in Android 15+, which caused connections between components to exit immediately.
+    if [[ -f "/data/adb/$MODID.dat" ]]; then
+        # clean MODID.dat && reset the app data as well
+        rm -f "/data/adb/$MODID.dat"
+        keep_opt="--keep-apkinstaller-userfile"
+        wu=1
+        if AppInstaller --get-running-user $keep_opt --nopr; then
+            wu=0
+        fi
+        [ $wu -eq 0 ] && {
+            working_user="$(cat $SDK_ROOTDIR/tmp/apkinstaller)"
+            [ ! -z $working_user ] && {
+                pm clear --user $working_user $NICENAME | redi "🧹"
+            } || pm clear $NICENAME | redi "🧹"
+        }
+    fi
+    
+    NOT_NEEDED=(
+        "$SDK_ROOTDIR/bin/upenv"
+    )
+    for ((f = 0; f < ${#NOT_NEEDED[@]}; f++)); do
+        F2CLEAN="${NOT_NEEDED[f]}"
+        if [[ -f "$F2CLEAN" ]] || [[ -d "$F2CLEAN" ]]; then
+            rm -rf $F2CLEAN
+        fi
+    done
     
 
 }
@@ -276,7 +237,7 @@ function install_iunlocker_app() {
     fi
 }
 
-checkMagiskVer
+# checkMagiskVer
 
 # Extracting files.
 NEEDED=(
@@ -290,9 +251,13 @@ NEEDED=(
 	"post-fs-data.sh"
 	"properties.h"
 	"iUnlockerGL.apk"
-	"$MODID.dat" # v1.1.5-r1 this config will be extracted only if it's not exists in modpath | --ovrw, ++upenv
+	"$MODID.dat" # v1.1.5-r2 this config will be extracted only if it's not exists in Communication dir | --ovrw, ++upenv
 	"LICENSE"
 	"AmethystRunner.sh"
+	"plupdate_checker.sh"
+	"nsgen.sh"
+	"service.sh"
+	"utilities.sh"
 )
 
 PERMISSIONS=(
@@ -305,23 +270,19 @@ ADDIR="/data/adb"
 SDK_ROOTDIR="$ADDIR/iunlocker"
 ANDROID_TEMP_DIR="/data/local/tmp"
 TOOLS="$SDK_ROOTDIR/tools"
-
+COMM_DIR="$SDK_ROOTDIR/share/Comm"
 
 for ((f = 0; f < ${#NEEDED[@]}; f++)); do
     NED="${NEEDED[f]}"
-    if [[ "$NED" == "$MODID.dat" ]]; then
-        if [[ ! -f "$ADDIR/$MODID.dat" ]]; then
-            extract "$NED" "$ADDIR"
+    if [[ "$NED" == "iunlocker/*" ]]; then
+        extract "$NED" "$ADDIR"
+    elif [[ "$NED" == "$MODID.dat" ]]; then
+        if [[ ! -f "$COMM_DIR/$MODID.dat" ]]; then
+            extract "$NED" "$COMM_DIR"
         else
             $SDK_ROOTDIR/bin/upenv | redi "upenv"
         fi
-    elif [[ "$NED" == "iunlocker/*" ]]; then
-        extract "$NED" "$ADDIR"
-    elif [[ "$NED" == "AmethystRunner.sh" ]]; then
-        extract "$NED" "$SDK_ROOTDIR/share/Scripts"
-    elif [[ "$NED" == "updater.sh" ]]; then
-        extract "$NED" "$SDK_ROOTDIR/share/Scripts"
-    elif [[ "$NED" == "plugin_flasher.sh" ]]; then
+    elif [[ "$NED" == *".sh" ]] && [[ "$NED" != "post-fs-data.sh" ]]; then
         extract "$NED" "$SDK_ROOTDIR/share/Scripts"
     elif [[ "$NED" == "properties.h" ]]; then
         extract "$NED" "$SDK_ROOTDIR/include"
@@ -351,35 +312,31 @@ done
 
 # Required for Ghost::FORCE_LDPRELOADER tool...
 {
-	if chown root:root "$SDK_ROOTDIR/lib/libgl_loader.so"; then
+	if chown root:root "$SDK_ROOTDIR/lib/libgl_loader.so" && chown -R root:root $COMM_DIR; then
 		status_print + "Successfully changed owner."
 	else
 		status_print - "Couldn't change owner"
 	fi
 }
 
-status_print + "Setting up Ghost Container"
-# LILITH_TABLEFILE="$MODPATH/Lilith.rx" // replaced with ghost container
-
-JsonWriter "$MODPATH/ghost.json" \
-    "ghostJson" "/data/user/0/$NICENAME/files/ghost_container.json" \
-    "ghostEt" "ERR_Connectivity|ERR_Tamper|ERR_nsfailed" \
-    "environment_xloader_init" "null" \
-    "isRandomTempfs" "true" \
-    "restricted_dirs" "DYN${MODID}ENDDYN" \
-    "onRun" 0x0 \
-    "onStop" 0x1 \
-    "onStart" 0x2 \
-    "onMemoryAddressReceived" 0x3 \
-    "destructionAfter" 500 #ms
-
 # Running prototype test unit...
 function configen() {
 	$SDK_ROOTDIR/bin/configen "$@"
 	return $?
 }
+function prototype() {
+    local args=()
+    $PROTOTYPE_LOGALL && args+=("--logall")
+    "$SDK_ROOTDIR/bin/prototype" "${args[@]}"
+    return $?
+}
+
+if ! mv "$SDK_ROOTDIR/lib/libtest_lib.so" "$MODPATH"; then
+    status_print - "Failed to move libtest_lib.so! it's needed by prototype"
+fi
+
 status_print + "Running prototype test unit..."
-if ! $SDK_ROOTDIR/bin/prototype; then
+if ! prototype; then
 	abort "Prototype indicate failure, means your device is not supported !"
 else
 	# It's Important to tell our service of the prototype success.
@@ -388,7 +345,7 @@ else
 	sclass_uuid_magic_addr='0x8F2EA0'
 	sclass_uuid_identifier="UUID_MAGIC" 
 	sclass_receiver_expt_value="${run_thro}::OK_Connectivity" # OK_Connectivity -> essential 
-	configen -o "$MODPATH/prototype.dat" \
+	configen -o "$COMM_DIR/prototype.dat" \
 		-s "$sclass_handler" -k "$sclass_uuid_identifier" -v "$sclass_uuid_magic_addr:$sclass_receiver_expt_value" 2>&1 | redi
 fi
 
@@ -397,7 +354,7 @@ install_iunlocker_app
 ensure_updater
 
 # Important steps ] let's check if $MODID.dat and properties.h
-if [ ! -f "$ADDIR/$MODID.dat" ]; then
+if [ ! -f "$COMM_DIR/$MODID.dat" ]; then
 	status_print - "Couldn't find $MODID.dat !!! without \`$MODID.dat\` file your system will not boot correctly or it will not boot at all"
 fi
 

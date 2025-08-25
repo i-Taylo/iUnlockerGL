@@ -3,9 +3,7 @@
 MODDIR=${0%/*}
 MODULESDIR="$(dirname $MODDIR)"
 iunlocker_package="com.taylo.iunlockergl"
-iunlocker_updater_package="com.taylo.iunlockergl.updater"
 data_dir="/data/data"
-iunlocker_sapphire_id='iUnlockerSapphire'
 operation='uninstall'
 ADDIR="/data/adb"
 DEFAULT_PATH="$ADDIR/magisk"
@@ -48,8 +46,8 @@ if $NOFD; then
     fi
 fi
 
-if [[ -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat" ]]; then
-    if ! rm -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat"; then
+if [[ -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat" ]] || [[ -f "$iSDK/share/Comm/Mjg2MjU1ODg0Mwo.dat" ]]; then
+    if ! rm -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat" || ! rm -f "$ADDIR/Mjg2MjU1ODg0Mwo.dat"; then
         append_something "Error while removing configuration file"
     fi
 fi

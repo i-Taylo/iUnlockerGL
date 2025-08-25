@@ -1,15 +1,13 @@
-## Changelog
+# Changelog
 
-### Module
-* Minor improvements and optimizations
+## App & Module Updates
 
-### App
-* Major update to the iUnlockerGL application:
-  1. Complete source code rewrite to Kotlin
-  2. New interface and UI design
-  3. Improved application management
-  
-### App & module 
-- Added emulator support for both App and Module components
-- Improved compatibility across different Android versions
-- Optimized resource management for better performance
+### ✨ New Features
+- **Refresh Rate Spoofing**: Added experimental refresh rate spoofing functionality with dedicated configuration tab
+- **Backup & Restore**: Added backup and restore functionality allowing users to save and load their saved configurations
+
+### 🐛 Bug Fixes & Improvements
+- **Enhanced Installation Reliability**: Implemented fallback extraction paths for critical installation files (`installer.sh` and `bin/$ARCH.xz`) to improve module deployment success rate in Emulators
+- **Android 11 & 15+ Compatibility**: Resolved connection timeout issues where the retry mechanism failed to generate authentication tokens for reconnection, which affected some devices running Android 11 and later versions.
+- **System Optimizations**: Various performance improvements and code optimizations
+

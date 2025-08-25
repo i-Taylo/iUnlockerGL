@@ -1,8 +1,8 @@
 #!/data/adb/iunlocker/bin/bash
 
-SDK_ROOTDIR="/data/adb/iunlocker"
-TEMPDIR="$SDK_ROOTDIR/tmp"
-ADDIR="/data/adb"
+readonly SDK_ROOTDIR="/data/adb/iunlocker"
+readonly TEMPDIR="$SDK_ROOTDIR/tmp"
+readonly ADDIR="/data/adb"
 
 function grep_prop() { # from util_functions.sh | magisk
 	local REGEX="s/^$1=//p"
