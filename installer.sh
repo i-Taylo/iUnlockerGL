@@ -219,34 +219,21 @@ function ensure_updater() {
 }
 
 function install_iunlocker_app() {
-    local keep_opt="--keep-apkinstaller-userfile"
-    local use_wu=""
-    local apk_file=""
-
-    # Determine if we should use working user
-    if AppInstaller --get-running-user "$keep_opt" --nopr; then
-        use_wu="--use-working-user"
-    fi
-
-    # Install iUnlockerGL.apk
-    apk_file="$MODPATH/iUnlockerGL.apk"
-    if [[ ! -f "$apk_file" ]]; then 
-        status_print w "iUnlockerGL.apk not found in module directory"
+    
+    if [ ! -f "$MODPATH/iUnlockerGL.apk" ]; then 
+        status_print w "iUnlockerGL.apk application is not found in the archive"
     else
-        if AppInstaller --install "$apk_file" "$keep_opt" "$use_wu"; then
-            # Grant permissions only if installation succeeded
-            for perm in "${PERMISSIONS[@]}"; do
-                AppInstaller --grant-app-perm "$NICENAME" "$perm" "$keep_opt" "$use_wu"
-            done
+        # Using AppInstaller api
+        local keep_opt="--keep-apkinstaller-userfile"
+        local use_wu=""
+        if AppInstaller --get-running-user $keep_opt --nopr; then
+            use_wu="--use-working-user"
         fi
-    fi
-
-    # Install iUnlockerUpdater.apk  
-    apk_file="$MODPATH/iUu.apk"
-    if [[ ! -f "$apk_file" ]]; then
-        status_print w "iUnlockerUpdater.apk not found in module directory"
-    else
-        AppInstaller --install "$apk_file" "$keep_opt" "$use_wu"
+        if AppInstaller --install "$MODPATH/iUnlockerGL.apk" $keep_opt $use_wu; then
+        	for ((perm = 0; perm < ${#PERMISSIONS[@]}; perm++)); do
+        		AppInstaller --grant-app-perm "$NICENAME" "${PERMISSIONS[perm]}" $keep_opt $use_wu
+        	done
+        fi
     fi
 }
 
@@ -264,7 +251,6 @@ NEEDED=(
 	"post-fs-data.sh"
 	"properties.h"
 	"iUnlockerGL.apk"
-	"iUu.apk"
 	"$MODID.dat" # v1.1.5-r2 this config will be extracted only if it's not exists in Communication dir | --ovrw, ++upenv
 	"LICENSE"
 	"AmethystRunner.sh"
