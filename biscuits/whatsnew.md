@@ -1,5 +1,4 @@
 # Changelog
+- Removed expiration date 
 
-## App & Module Updates
-
-extended module duration 
+⚠️ Make sure to uninstall previous version then install this version.
